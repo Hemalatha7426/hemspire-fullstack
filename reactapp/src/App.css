@@ -1,0 +1,47 @@
+/* Light mode (default) */
+body {
+  background-color: #f9f9f9;
+  color: #222;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Dark mode */
+body.dark-mode {
+  background-color: #121212;
+  color: #f1f1f1;
+}
+
+/* Example: Cards */
+.poem-card {
+  background-color: #fff;
+  color: #222;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark-mode .poem-card {
+  background-color: #1e1e1e;
+  color: #f1f1f1;
+  box-shadow: 0 2px 8px rgba(255,255,255,0.1);
+}
+
+/* Buttons */
+button {
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Inputs / Textareas */
+input, textarea {
+  background-color: #fff;
+  color: #222;
+  border: 1px solid #ccc;
+  transition: background-color 0.3s, color 0.3s, border 0.3s;
+}
+
+body.dark-mode input,
+body.dark-mode textarea {
+  background-color: #2a2a2a;
+  color: #f1f1f1;
+  border: 1px solid #555;
+}
