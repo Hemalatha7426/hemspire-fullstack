@@ -60,7 +60,7 @@ export default function AudioPageToggle() {
 
   return (
     <div className={`audio-toggle-page ${isDarkMode ? "dark-mode" : "light-mode"}`}>
-      <h1 className="audio-toggle-title">All Audio Files</h1>
+      <h1 className="audio-toggle-title">ALL AUDIO FILES</h1>
 
       <div className="audio-toggle-search">
         <input
