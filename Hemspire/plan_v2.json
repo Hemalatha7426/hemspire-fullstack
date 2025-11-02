@@ -2,124 +2,159 @@
   {
     "step": "Read Spring Boot project dependencies and analyze backend boilerplate structure",
     "sub_steps": [
-      "Open /home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/pom.xml and review dependencies to ensure availability for Spring Web, JPA, Validation, MySQL, and Lombok.",
+      "Open /home/coder/project/workspace/hemspire_app/springapp/pom.xml and review dependencies to ensure availability for Spring Web, JPA, Validation, MySQL, Lombok, Spring Security, JWT (jjwt-api, jjwt-impl), and OpenAPI (springdoc-openapi).",
       "Review the generated package structure and resource configuration files (application.properties).",
-      "Identify paths for models, repositories, services, controllers, exception handling."
+      "Identify paths for models, repositories, services, controllers, exception handling, security, and config.",
+      "Confirm application.properties includes datasource, jpa, jwtSecret, jwtExpiration, and file upload (multipart, static-locations) settings."
     ],
     "files_to_add": [],
     "files_to_edit": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/pom.xml",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/resources/application.properties"
+      "/home/coder/project/workspace/hemspire_app/springapp/pom.xml",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/resources/application.properties"
     ],
-    "description": "This step ensures familiarity with project structure and available backend dependencies, validates that all required libraries are present for subsequent implementation (entities, validation, persistence, REST, etc)."
+    "description": "This step ensures familiarity with project structure and available backend dependencies, validates that all required libraries are present for subsequent implementation (entities, security, persistence, file handling, REST, etc)."
   },
   {
-    "step": "Implement Data Models (Entities) for Customer and Claim",
+    "step": "Implement Data Models (Entities)",
     "sub_steps": [
-      "Create Customer and Claim entities in /model with appropriate JPA annotations (@Entity, @Id, relationships).",
-      "Add validation annotations per requirements (e.g., @NotNull, @Email, @Positive).",
-      "Claim references Customer via ManyToOne (customerId as foreign key).",
-      "Include Lombok annotations (@Data, @NoArgsConstructor, @AllArgsConstructor) where suitable."
+      "Create User entity in /model with fields (id, name, email, password, role) and JPA annotations.",
+      "Create Poem, Audio, and Video entities with fields (id, title, description, [image/audio/video]Path) and JPA annotations.",
+      "Create ContactMessage entity with fields (id, name, email, phoneNumber, subject, message) and JPA annotations.",
+      "Include Lombok annotations (@Data, @Builder, @NoArgsConstructor, @AllArgsConstructor) where suitable."
     ],
     "files_to_add": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/model/Customer.java",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/model/Claim.java"
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/model/User.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/model/Poem.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/model/Audio.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/model/Video.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/model/ContactMessage.java"
     ],
     "files_to_edit": [],
-    "description": "Establishes persistent data models with all required fields and relationships. Sets up validation to ensure reliable data storage and input checking as per requirements. Supports test cases such as creating, fetching, and relating customers and claims."
+    "description": "Establishes persistent data models for users, content (poems, audio, video), and feedback messages with all required fields."
   },
   {
-    "step": "Create Repositories for Customer and Claim",
+    "step": "Create Repositories for Data Access",
     "sub_steps": [
-      "Define repository interfaces for Customer and Claim extending JpaRepository.",
-      "Add custom query methods as needed (e.g. for finding claims by customerId)."
+      "Define repository interfaces for all 5 entities (User, Poem, Audio, Video, ContactMessage) extending JpaRepository.",
+      "Add custom query methods to UserRepository (e.g., findByEmail, existsByEmail).",
+      "Add custom query methods to content repos (e.g., findByTitleContainingIgnoreCase) for search functionality."
     ],
     "files_to_add": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/repository/CustomerRepository.java",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/repository/ClaimRepository.java"
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/repository/UserRepository.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/repository/PoemRepository.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/repository/AudioRepository.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/repository/VideoRepository.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/repository/ContactRepository.java"
     ],
     "files_to_edit": [],
-    "description": "Allows data access and persistence for business services and controllers through simple repository pattern."
+    "description": "Allows data access and persistence for all services. Includes custom queries for authentication and search features."
   },
   {
     "step": "Implement Exception Handling Infrastructure",
     "sub_steps": [
       "Create global exception handler using @ControllerAdvice.",
-      "Define custom exceptions: ResourceNotFoundException, ValidationException.",
-      "Configure error responses (message, status) for validation, not found, and generic errors."
+      "Define custom exceptions: ResourceNotFoundException, ValidationException, AuthException.",
+      "Configure error responses (message, status) for validation, not found, auth failures, and generic errors."
     ],
     "files_to_add": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/exception/GlobalExceptionHandler.java",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/exception/ResourceNotFoundException.java",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/exception/ValidationException.java"
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/exception/GlobalExceptionHandler.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/exception/ResourceNotFoundException.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/exception/AuthException.java"
     ],
     "files_to_edit": [],
-    "description": "Provides robust, user-friendly error handling for REST APIs, crucial for satisfying validation and resource-not-found requirements and supporting the error scenarios tested in test cases."
+    "description": "Provides robust, user-friendly error handling for REST APIs, crucial for satisfying validation and resource-not-found requirements."
   },
   {
-    "step": "Develop Service Layer for Business Logic (CustomerService and ClaimService)",
+    "step": "Implement Spring Security Infrastructure",
     "sub_steps": [
-      "Implement CustomerService for create, fetchAll, fetchById, and validation logic.",
-      "Implement ClaimService for submit, fetchAll, fetchById, fetchByCustomer, and status-update logic.",
-      "Enforce input validation, check foreign key relationships (customer existence), manage status transitions and date fields."
+      "Create CustomUserDetailsService to load users by email from UserRepository.",
+      "Create JwtUtil class to generate, validate, and parse JWTs.",
+      "Create JwtRequestFilter to intercept requests, validate JWT, and set SecurityContext.",
+      "Create SecurityConfig to configure http security, CORS, session management (stateless), password encoder, and auth manager.",
+      "Define public routes (e.g., /api/auth/**, GET /api/poems/**) and secured routes (e.g., /api/**/admin/**)."
     ],
     "files_to_add": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/service/CustomerService.java",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/service/ClaimService.java"
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/config/SecurityConfig.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/config/CustomUserDetailsService.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/security/JwtUtil.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/security/JwtRequestFilter.java"
     ],
     "files_to_edit": [],
-    "description": "Centralizes business logic, ensures constraints and validation are enforced for API endpoints to support positive and negative test cases."
+    "description": "Implements JWT-based authentication and role-based authorization (USER, ADMIN) to secure the application."
+  },
+  {
+    "step": "Develop Service Layer for Business Logic",
+    "sub_steps": [
+      "Implement UserService for register (with password encoding), findByEmail, and user management (getAll, delete).",
+      "Implement PoemService, AudioService, and VideoService to handle CRUD, search, and file upload/storage logic (saving to 'uploads/' directory).",
+      "Implement ContactService for submitting feedback and admin-level CRUD/search operations.",
+      "Map entities to DTOs for all public-facing data."
+    ],
+    "files_to_add": [
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/service/UserService.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/service/PoemService.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/service/AudioService.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/service/VideoService.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/service/ContactService.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/dto/PoemDto.java"
+    ],
+    "files_to_edit": [],
+    "description": "Centralizes business logic, including auth, content management, file handling (storage to disk), and feedback processing."
   },
   {
     "step": "Create Controllers with All Required REST Endpoints",
     "sub_steps": [
-      "Develop CustomerController with POST /api/customers, GET /api/customers, GET /api/customers/{customerId}.",
-      "Develop ClaimController with POST /api/claims, GET /api/claims, GET /api/claims/{claimId}, GET /api/customers/{customerId}/claims, PUT /api/claims/{claimId}/status.",
-      "Ensure correct mapping, request/response structure, validation and error responses.",
-      "Document all endpoints with proper annotations for clarity."
+      "Develop AuthController (POST /api/auth/register, POST /api/auth/login).",
+      "Develop UserController (GET /api/users, DELETE /api/users/{id}) secured for ADMIN.",
+      "Develop PoemController, AudioController, VideoController with public GET endpoints and admin-only POST/PUT/DELETE endpoints (using multipart/form-data for uploads).",
+      "Develop ContactController with public POST /submit endpoint and admin-only GET/DELETE endpoints.",
+      "Add @Tag and @Operation annotations for OpenAPI documentation."
     ],
     "files_to_add": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/controller/CustomerController.java",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/controller/ClaimController.java"
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/controller/AuthController.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/controller/UserController.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/controller/PoemController.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/controller/AudioController.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/controller/VideoController.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/controller/ContactController.java"
     ],
     "files_to_edit": [],
-    "description": "Implements all required endpoints for customer and claim management. REST endpoints must support all described functionality and support error handling for frontend and testing."
+    "description": "Implements all required API endpoints for authentication, content management, and user feedback, with clear role separation."
   },
   {
-    "step": "Configure CORS to Allow Frontend Integration",
+    "step": "Configure CORS, File Serving, and OpenAPI",
     "sub_steps": [
-      "Update main application class or create a WebConfig class to allow CORS from http://localhost:3000.",
-      "Ensure all API controllers permit cross-origin requests for development."
+      "Create WebConfig class to implement addResourceHandlers for serving files from the external 'uploads/' directory.",
+      "Global CORS configuration will be handled in SecurityConfig.",
+      "Create OpenApiConfig class to define security schemes (JWT Bearer) for Swagger UI."
     ],
     "files_to_add": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/WebConfig.java"
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/config/WebConfig.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/config/OpenApiConfig.java"
     ],
     "files_to_edit": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/main/java/com/examly/springapp/InsuranceClaimProcessingSystemApplication.java"
+      "/home/coder/project/workspace/hemspire_app/springapp/src/main/java/com/examly/springapp/HemspireApplication.java"
     ],
-    "description": "Allows smooth development and communication between frontend (React) and backend (Spring Boot). Required for React API calls to be permitted."
+    "description": "Allows frontend integration (CORS), enables serving of uploaded media, and configures Swagger UI for API documentation and testing."
   },
   {
-    "step": "Implement All Backend JUnit Test Cases (Controllers/Service Layer)",
+    "step": "Implement All Backend JUnit Test Cases",
     "sub_steps": [
-      "For each test from the testcases JSON, create/modify tests in appropriate *Test.java files:",
-      "testCreateCustomer - test POST /api/customers for success, required validation, 201 response, correct fields.",
-      "testGetCustomerById - test GET /api/customers/{id} for existing/non-existent IDs, expect 200 or 404.",
-      "testSubmitClaim - test POST /api/claims for success/validation/error, status/submissionDate defaults.",
-      "testUpdateClaimStatus - test PUT /api/claims/{claimId}/status, test valid and invalid status, 400/404 as applicable.",
-      "testGetCustomerClaims - test GET /api/customers/{customerId}/claims for correct claim list and error on not found.",
+      "testRegisterUser, testLoginUserSuccess, testLoginUserFail - in AuthControllerTest.",
+      "testAdminGetAllUsers, testAdminDeleteUser, testUserCannotAccessUsers - in UserControllerTest, using @WithMockUser.",
+      "testPublicGetPoems, testAdminCreatePoem (with MockMultipartFile), testAdminDeletePoem, testUserCannotCreatePoem - in PoemControllerTest.",
       "Apply mocking for services/repositories as needed.",
-      "Reference the corresponding model, repository, service, controller files for each test.",
-      "Ensure integration and negative scenario coverage."
+      "Ensure coverage for auth, roles, file uploads, and public access."
     ],
     "files_to_add": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/test/java/com/examly/springapp/controller/CustomerControllerTest.java",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/test/java/com/examly/springapp/controller/ClaimControllerTest.java"
+      "/home/coder/project/workspace/hemspire_app/springapp/src/test/java/com/examly/springapp/controller/AuthControllerTest.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/test/java/com/examly/springapp/controller/PoemControllerTest.java",
+      "/home/coder/project/workspace/hemspire_app/springapp/src/test/java/com/examly/springapp/controller/UserControllerTest.java"
     ],
     "files_to_edit": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/springapp/src/test/java/com/examly/springapp/InsuranceClaimProcessingSystemApplicationTests.java"
+      "/home/coder/project/workspace/hemspire_app/springapp/src/test/java/com/examly/springapp/HemspireApplicationTests.java"
     ],
-    "description": "Ensures each backend endpoint behaves as required, validations and error handling are correct, and all controller logic is robust. Supports all JUnit scenarios from testcases JSON."
+    "description": "Ensures all endpoints behave as required, especially security (auth/roles) and multipart file uploads."
   },
   {
     "step": "Compile and Run Backend (Spring Boot) Tests",
@@ -134,68 +169,58 @@
   {
     "step": "Read and analyze React frontend dependencies and structure",
     "sub_steps": [
-      "Review /home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/package.json to check dependencies (React, react-router-dom, etc).",
-      "Review boilerplate structure to determine where to add components (src/components) and utility files."
+      "Review /home/coder/project/workspace/hemspire_app/reactapp/package.json to check dependencies (React, react-router-dom, axios, jwt-decode).",
+      "Review boilerplate structure to determine where to add components (src/components), services (src/services), context (src/context), and hooks."
     ],
     "files_to_add": [],
     "files_to_edit": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/package.json"
+      "/home/coder/project/workspace/hemspire_app/reactapp/package.json"
     ],
-    "description": "Ensures correct setup for adding UI components, routing, style and service utilities, and test files."
+    "description": "Ensures correct setup for adding UI components, routing, API services, and authentication state management."
   },
   {
-    "step": "Implement UI and API Services: Customer and Claim Components",
+    "step": "Implement UI, Routing, and API Services",
     "sub_steps": [
-      "Create components: CustomerRegistration, CustomerList, CustomerDetail, ClaimSubmission, ClaimList, ClaimDetail in src/components.",
-      "Each component must follow requirements: field presence, validation, tables/lists, filter and detail display, update mechanics.",
-      "Create corresponding CSS and utility files as needed (button classes, error handling, general layout).",
-      "Create and use CustomerService and ClaimService inside src/utils/ for API interactions (fetch, create, update).",
-      "Integrate error handling, loading state, and message display as specified.",
-      "Use React Router for navigation (add routes to App.js as per requirements).",
-      "Ensure required style guidelines, form/input features, and interaction design are implemented."
+      "Create auth components: Login.js, Register.js.",
+      "Create public components: Home.js, PoemList.js, AudioList.js, VideoList.js, Contact.js, Navbar.js.",
+      "Create admin components: AdminDashboard.js, ContentManager.js (PoemForm, AudioForm, VideoForm), UserManager.js, FeedbackViewer.js.",
+      "Create utility components: AdminRoute.js (protected route), AuthContext.js (to manage user/token state).",
+      "Create API services: authService.js, poemService.js, audioService.js, videoService.js, contactService.js, using Axios with JWT interceptor.",
+      "Configure main App.js with React Router, AuthProvider, and all public/private routes."
     ],
     "files_to_add": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/CustomerRegistration.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/CustomerList.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/CustomerDetail.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/ClaimSubmission.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/ClaimList.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/ClaimDetail.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/utils/CustomerService.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/utils/ClaimService.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/CustomerRegistration.css",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/CustomerList.css",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/CustomerDetail.css",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/ClaimSubmission.css",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/ClaimList.css",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/ClaimDetail.css"
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/components/Login.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/components/Register.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/components/PoemList.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/components/AdminDashboard.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/components/AdminRoute.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/services/authService.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/services/poemService.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/services/audioService.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/srcs/services/videoService.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/services/contactService.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/context/AuthContext.js"
     ],
     "files_to_edit": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/App.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/App.css"
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/App.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/App.css"
     ],
-    "description": "Delivers all functional frontend UI for customer and claim workflows, with correct API integration, React Router setup, validation, and style."
+    "description": "Delivers all functional frontend UI for public and admin workflows, with API integration, routing, and global auth state."
   },
   {
     "step": "Implement All Jest Test Cases for React Components",
     "sub_steps": [
-      "For each test case from the testcases JSON, create a corresponding *.test.js file:",
-      "renderCustomerRegistrationForm - tests presence and validation of registration form, mocking API call.",
-      "renderClaimListComponent - tests claim list table, initial rendering, filter, and navigation to detail component.",
-      "renderClaimDetailComponent - tests claim details, status update dropdown, API call, and status change feedback.",
-      "renderCustomerDetailWithClaims - tests customer detail page, claims list, new claim navigation.",
-      "Use RTL best practices: data-testid attributes, minimal mocking, error/message expectation.",
-      "Ensure no manual cleanup, proper isolation, and only required assertions.",
-      "Each test should reference its respective component and any used utility function."
+      "renderLoginComponent - tests form rendering, input, submission, and mocking authService.login.",
+      "renderPoemListComponent - tests rendering of poems fetched from a mock API call.",
+      "renderAdminDashboard - tests that a non-admin user is redirected, and an admin user can see admin components (using mock AuthContext)."
     ],
     "files_to_add": [
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/CustomerRegistration.test.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/ClaimList.test.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/ClaimDetail.test.js",
-      "/home/coder/project/workspace/question_generation_service/solutions/9a8816a7-f944-417c-b621-880c521e5fc9/reactapp/src/components/CustomerDetail.test.js"
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/components/Login.test.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/components/PoemList.test.js",
+      "/home/coder/project/workspace/hemspire_app/reactapp/src/components/AdminDashboard.test.js"
     ],
     "files_to_edit": [],
-    "description": "Ensures UI components are tested for all required behaviors and edge cases following the provided test expectations using Jest and React Testing Library."
+    "description": "Ensures UI components are tested for rendering, user interaction, API mocking, and auth-based conditional logic."
   },
   {
     "step": "Lint, Compile, and Test React Frontend",
@@ -207,6 +232,6 @@
     ],
     "files_to_add": [],
     "files_to_edit": [],
-    "description": "Validates that the React frontend builds, passes all style and code standards, and passes all tests derived from the test cases JSON."
+    "description": "Validates that the React frontend builds, passes all style/code standards, and passes all Jest tests."
   }
 ]
