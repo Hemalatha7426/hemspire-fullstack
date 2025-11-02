@@ -10,12 +10,17 @@
     <version>3.4.0</version>
     <relativePath/>
   </parent>
+<!-- Add this in pom.xml if not present -->
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-actuator</artifactId>
+</dependency>
 
   <groupId>com.examly</groupId>
   <artifactId>springapp</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <name>Insurance Claim Processing System</name>
-  <description>Spring Boot backend for Insurance Claim Processing application</description>
+  <name>Hemspire Poem Apllication</name>
+  <description>Spring Boot backend for Hemspire Poems Application</description>
 
   <properties>
     <java.version>17</java.version>
