@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+// src/App.js
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useAuth } from "./context/AuthContext";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer"; // ✅ Import Footer
+import LoginPage from "./pages/LoginPage";
+import RegisterPage from "./pages/RegisterPage";
+import HomePage from "./pages/HomePage";
+import PoemsPage from "./pages/PoemsPage";
+import AudioPage from "./pages/AudioPage";
+import VideoPage from "./pages/VideoPages";
+import ContactPage from "./pages/ContactPage";
+import AboutPage from "./pages/AboutPage"; // ✅ Import AboutPage
 
-function App() {
+export default function App() {
+  const { user } = useAuth();
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      {/* ✅ Show Navbar only if logged in */}
+      {user && <Navbar />}
+
+      <Routes>
+        <Route path="/" element={user ? <HomePage /> : <LoginPage />} />
+        <Route path="/poems" element={user ? <PoemsPage /> : <LoginPage />} />
+        <Route path="/audio" element={user ? <AudioPage /> : <LoginPage />} />
+        <Route path="/video" element={user ? <VideoPage /> : <LoginPage />} />
+        <Route path="/contact" element={user ? <ContactPage /> : <LoginPage />} />
+        <Route path="/about" element={user ? <AboutPage /> : <LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+      </Routes>
+
+      {/* ✅ Footer is shown on all pages */}
+      <Footer />
+    </BrowserRouter>
   );
 }
-
-export default App;
